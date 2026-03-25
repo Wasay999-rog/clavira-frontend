@@ -1,4 +1,6 @@
-const BASE = '/api';
+const BASE = import.meta.env.PROD
+  ? 'https://clavira-backend.onrender.com/api'
+  : '/api';
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, {
