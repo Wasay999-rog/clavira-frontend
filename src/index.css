@@ -1,0 +1,43 @@
+:root {
+  --bg: #07060E;
+  --surface: #161327;
+  --surface2: #1E1A36;
+  --purple: #7C3AED;
+  --purple-light: #8B5CF6;
+  --purple-lighter: #A78BFA;
+  --purple-pale: #C4B5FD;
+  --text: #F0EEFF;
+  --muted: #7C749A;
+  --green: #10B981;
+  --red: #F43F5E;
+  --gold: #F59E0B;
+  --blue: #3B82F6;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body, #root { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: rgba(124, 58, 237, 0.35); color: #fff; }
+input, textarea, select, button { font-family: inherit; }
+a { color: inherit; text-decoration: none; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.25); border-radius: 3px; }
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 768px) {
+  .nav { padding: 0 16px; }
+  .nav-links { display: none; }
+  .nav-cta { font-size: 12px; padding: 7px 16px; }
+  .section-wrap { padding-left: 20px !important; padding-right: 20px !important; }
+  .footer { padding: 24px 20px; flex-direction: column; gap: 12px; text-align: center; }
+  .chatbot-window { width: calc(100vw - 32px); right: 16px; bottom: 80px; height: 420px; }
+}

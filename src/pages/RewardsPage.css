@@ -1,0 +1,42 @@
+.rewards-page { padding-top: 90px; }
+
+.rew-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 48px; background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(16,185,129,0.06)); border-radius: 16px; padding: 28px; border: 1px solid rgba(124,58,237,0.12); text-align: center; }
+.rew-s-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.rew-s-val { font-size: 28px; font-weight: 800; }
+.rew-s-val.purple { color: var(--purple-lighter); }
+.rew-s-val.green { color: var(--green); }
+.rew-s-val.gold { color: var(--gold); }
+
+.rew-section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+
+.rew-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
+.rew-card { background: var(--surface); border-radius: 16px; padding: 22px; border: 1px solid rgba(124,58,237,0.08); transition: border-color 0.2s; }
+.rew-card:hover { border-color: rgba(124,58,237,0.2); }
+.rew-card-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.rew-card-rate { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+.rew-card-points-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; }
+.rew-card-pts { font-size: 20px; font-weight: 800; color: var(--purple-lighter); }
+.rew-card-val { color: var(--muted); font-size: 12px; }
+.rew-card-pending { color: var(--gold); font-size: 12px; font-weight: 600; }
+.rew-card-best { display: flex; gap: 6px; flex-wrap: wrap; }
+.rew-tag { background: rgba(124,58,237,0.1); color: var(--purple-lighter); font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+
+.rew-cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 48px; }
+.rew-cat-item { background: var(--surface); border-radius: 12px; padding: 16px; border: 1px solid rgba(124,58,237,0.08); }
+.rew-cat-name { color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+.rew-cat-card { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.rew-cat-rate { color: var(--green); font-size: 13px; font-weight: 700; }
+
+.rew-tips { display: flex; flex-direction: column; gap: 12px; }
+.rew-tip { background: var(--surface); border-radius: 12px; padding: 18px 22px; border: 1px solid rgba(124,58,237,0.08); display: flex; gap: 14px; align-items: flex-start; }
+.rew-tip-impact { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; margin-top: 2px; }
+.rew-tip-impact.high { background: rgba(16,185,129,0.12); color: var(--green); }
+.rew-tip-impact.medium { background: rgba(245,158,11,0.12); color: var(--gold); }
+.rew-tip-impact.low { background: rgba(124,58,237,0.1); color: var(--purple-lighter); }
+.rew-tip-text { font-size: 13px; line-height: 1.6; color: var(--text); }
+
+@media (max-width: 768px) {
+  .rew-summary { grid-template-columns: 1fr; }
+  .rew-cards-grid { grid-template-columns: 1fr; }
+  .rew-s-val { font-size: 22px; }
+}

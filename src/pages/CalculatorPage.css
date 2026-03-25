@@ -1,0 +1,47 @@
+.calc-page { padding-top: 90px; }
+.calc-card { background: var(--surface); border-radius: 16px; padding: 22px; border: 1px solid rgba(124,58,237,0.08); margin-bottom: 28px; }
+.calc-card-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.calc-load { font-size: 11px; color: var(--muted); font-weight: 500; }
+.calc-th { display: grid; grid-template-columns: 2fr 1fr 100px; gap: 8px; margin-bottom: 8px; color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.calc-tr { display: grid; grid-template-columns: 2fr 1fr 100px; gap: 8px; padding: 9px 0; border-top: 1px solid rgba(124,58,237,0.05); align-items: center; }
+.calc-name { font-size: 13px; }
+.calc-bal { font-size: 13px; font-weight: 600; }
+.calc-apr { background: var(--surface2); border: 1px solid rgba(124,58,237,0.1); border-radius: 7px; padding: 5px 8px; font-size: 13px; font-weight: 700; width: 72px; outline: none; color: var(--text); }
+.calc-apr:focus { border-color: var(--purple); }
+.calc-total { margin-top: 10px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.calc-total span { color: var(--text); }
+.calc-slider-row { display: flex; gap: 16px; align-items: center; }
+.calc-slider { flex: 1; accent-color: var(--purple); }
+.calc-amt-wrap { display: flex; align-items: center; gap: 4px; }
+.calc-dollar { color: var(--muted); font-size: 14px; }
+.calc-amt { background: var(--surface2); border: 1px solid rgba(124,58,237,0.15); border-radius: 7px; padding: 7px 10px; color: var(--text); font-size: 15px; font-weight: 700; width: 70px; outline: none; text-align: center; }
+.calc-amt:focus { border-color: var(--purple); }
+.calc-strats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+.calc-strat { background: var(--surface); border: 2px solid rgba(124,58,237,0.08); border-radius: 14px; padding: 18px 20px; cursor: pointer; text-align: left; transition: all 0.2s; font-family: inherit; }
+.calc-strat.active { background: color-mix(in srgb, var(--sc) 8%, transparent); border-color: var(--sc); }
+.calc-strat-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; color: var(--text); }
+.calc-strat.active .calc-strat-name { color: var(--sc); }
+.calc-strat-desc { color: var(--muted); font-size: 12px; }
+.calc-order-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(124,58,237,0.05); }
+.calc-order-row:last-child { border-bottom: none; }
+.calc-order-num { width: 26px; height: 26px; border-radius: 7px; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--muted); font-weight: 700; font-size: 12px; flex-shrink: 0; }
+.calc-order-num.first { background: var(--green); color: #fff; }
+.calc-order-name { font-size: 13px; flex: 1; }
+.calc-order-bal { color: var(--muted); font-size: 12px; }
+.calc-order-apr { font-size: 12px; font-weight: 600; }
+.calc-attack { color: var(--green); font-size: 11px; font-weight: 700; background: rgba(16,185,129,0.1); padding: 3px 8px; border-radius: 5px; }
+.calc-summary { background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(16,185,129,0.08)); border-radius: 16px; padding: 28px; border: 1px solid rgba(124,58,237,0.15); display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; }
+.calc-s-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.calc-s-val { font-size: 26px; font-weight: 800; }
+.calc-s-val.red { color: var(--red); }
+.calc-s-val.green { color: var(--green); }
+.calc-s-val.purple { color: var(--purple-lighter); }
+.calc-s-sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+@media (max-width: 768px) {
+  .calc-th, .calc-tr { grid-template-columns: 1.5fr 1fr 80px; font-size: 12px; }
+  .calc-strats { grid-template-columns: 1fr; }
+  .calc-summary { grid-template-columns: 1fr; gap: 16px; }
+  .calc-order-row { flex-wrap: wrap; }
+  .calc-order-name { font-size: 12px; }
+}
