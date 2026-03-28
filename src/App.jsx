@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from './components/AuthContext.jsx';
 
 // Lazy load pages
 const HomePage = lazy(() => import('./pages/HomePage.jsx'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage.jsx'));
 const FeaturesPage = lazy(() => import('./pages/FeaturesPage.jsx'));
 const CalculatorPage = lazy(() => import('./pages/CalculatorPage.jsx'));
 const RewardsPage = lazy(() => import('./pages/RewardsPage.jsx'));
@@ -40,7 +41,7 @@ function PageLoader() {
 }
 
 function AppContent() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, loading: authLoading, logout } = useAuth();
   const [page, setPage] = useState('Home');
   const [toast, setToast] = useState({ show: false, message: '' });
 
@@ -57,7 +58,6 @@ function AppContent() {
     if (verify) {
       setVerifyToken(verify);
       setPage('Verify Email');
-      // Clean URL
       window.history.replaceState({}, '', window.location.pathname);
     } else if (reset) {
       setResetToken(reset);
@@ -71,12 +71,15 @@ function AppContent() {
     setTimeout(() => setToast({ show: false, message: '' }), 3500);
   };
 
-  // Auth-aware page setter (redirect to login if needed)
   const navTo = (p) => {
-    // Pages that require auth
-    // For now, all pages are accessible — we'll gate specific features later
     setPage(p);
   };
+
+  // Determine what "Home" means based on auth
+  const isHome = page === 'Home';
+  const showDashboard = isHome && isAuthenticated && !authLoading;
+  const showHomePage = isHome && !isAuthenticated && !authLoading;
+  const showHomeLoading = isHome && authLoading;
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -87,9 +90,11 @@ function AppContent() {
         isAuthenticated={isAuthenticated}
         logout={logout}
       />
-      <div key={page} style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+      <div key={page + (isAuthenticated ? '-auth' : '')} style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
         <Suspense fallback={<PageLoader />}>
-          {page === 'Home' && <HomePage setPage={navTo} showToast={showToast} />}
+          {showHomeLoading && <PageLoader />}
+          {showHomePage && <HomePage setPage={navTo} showToast={showToast} />}
+          {showDashboard && <DashboardPage setPage={navTo} showToast={showToast} />}
           {page === 'Features' && <FeaturesPage />}
           {page === 'Calculator' && <CalculatorPage />}
           {page === 'Rewards' && <RewardsPage />}
@@ -108,7 +113,7 @@ function AppContent() {
         </Suspense>
         <Footer setPage={navTo} />
       </div>
-      {page === 'Home' && (
+      {(showHomePage || showDashboard) && (
         <Suspense fallback={null}>
           <Chatbot />
         </Suspense>
