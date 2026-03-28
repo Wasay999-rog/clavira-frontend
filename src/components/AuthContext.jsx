@@ -7,13 +7,12 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => getUser());
   const [loading, setLoading] = useState(true);
 
-  // Check auth on mount
   useEffect(() => {
     if (isLoggedIn()) {
       api.getMe()
         .then(data => {
           setUser(data.user);
-          setAuth(null, null, data.user); // Update stored user
+          setAuth(null, null, data.user);
         })
         .catch(() => {
           clearAuth();
@@ -25,7 +24,6 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // Listen for forced logout (e.g., token refresh failed)
   useEffect(() => {
     const handler = () => {
       setUser(null);
@@ -59,9 +57,7 @@ export function AuthProvider({ children }) {
       const data = await api.getMe();
       setUser(data.user);
       setAuth(null, null, data.user);
-    } catch {
-      // Silent fail
-    }
+    } catch { /* silent */ }
   }, []);
 
   return (
