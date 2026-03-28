@@ -1,22 +1,14 @@
 import { useState } from 'react';
 import './Nav.css';
 
-const NAV_LINKS = [
-  { label: 'Home', path: '/' },
-  { label: 'Features', path: '/features' },
-  { label: 'Calculator', path: '/calculator' },
-  { label: 'Rewards', path: '/rewards' },
-  { label: 'Credit Score', path: '/credit-score' },
-  { label: 'Pricing', path: '/pricing' },
-  { label: 'Contact', path: '/contact' },
-];
+const NAV_LINKS = ['Home', 'Features', 'Calculator', 'Rewards', 'Credit Score', 'Pricing', 'Contact'];
 
-export default function Nav({ navigate, user, isAuthenticated, logout, currentPath }) {
+export default function Nav({ page, setPage, user, isAuthenticated, logout }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-  const handleNav = (path) => {
-    navigate(path);
+  const handleNav = (p) => {
+    setPage(p);
     setMenuOpen(false);
     setUserMenuOpen(false);
   };
@@ -24,13 +16,13 @@ export default function Nav({ navigate, user, isAuthenticated, logout, currentPa
   const handleLogout = () => {
     logout();
     setUserMenuOpen(false);
-    navigate('/');
+    setPage('Home');
   };
 
   return (
     <nav className="nav">
       <div className="nav-inner">
-        <button className="nav-brand" onClick={() => handleNav('/')}>
+        <button className="nav-brand" onClick={() => handleNav('Home')}>
           <div className="nav-logo">C</div>
           <span className="nav-name">Clavira</span>
         </button>
@@ -38,11 +30,11 @@ export default function Nav({ navigate, user, isAuthenticated, logout, currentPa
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
           {NAV_LINKS.map(link => (
             <button
-              key={link.path}
-              className={`nav-link ${currentPath === link.path ? 'active' : ''}`}
-              onClick={() => handleNav(link.path)}
+              key={link}
+              className={`nav-link ${page === link ? 'active' : ''}`}
+              onClick={() => handleNav(link)}
             >
-              {link.label}
+              {link}
             </button>
           ))}
 
@@ -55,8 +47,8 @@ export default function Nav({ navigate, user, isAuthenticated, logout, currentPa
               </>
             ) : (
               <>
-                <button className="nav-link" onClick={() => handleNav('/login')}>Sign In</button>
-                <button className="nav-cta-mobile" onClick={() => handleNav('/register')}>Get Started</button>
+                <button className="nav-link" onClick={() => handleNav('Login')}>Sign In</button>
+                <button className="nav-cta-mobile" onClick={() => handleNav('Register')}>Get Started</button>
               </>
             )}
           </div>
@@ -79,18 +71,10 @@ export default function Nav({ navigate, user, isAuthenticated, logout, currentPa
                   <div className="nav-dropdown-header">
                     <div className="nav-dropdown-name">{user?.first_name} {user?.last_name}</div>
                     <div className="nav-dropdown-email">{user?.email}</div>
-                    <div className="nav-dropdown-tier">{user?.tier || 'Free'} Plan</div>
                     {!user?.is_verified && (
                       <div className="nav-dropdown-badge">Email not verified</div>
                     )}
                   </div>
-                  <div className="nav-dropdown-divider" />
-                  <button className="nav-dropdown-item" onClick={() => handleNav('/connect-bank')}>
-                    🏦 Connect Bank
-                  </button>
-                  <button className="nav-dropdown-item" onClick={() => handleNav('/pricing')}>
-                    ⭐ Upgrade Plan
-                  </button>
                   <div className="nav-dropdown-divider" />
                   <button className="nav-dropdown-item" onClick={handleLogout}>
                     Sign Out
@@ -100,8 +84,8 @@ export default function Nav({ navigate, user, isAuthenticated, logout, currentPa
             </div>
           ) : (
             <>
-              <button className="nav-signin" onClick={() => handleNav('/login')}>Sign In</button>
-              <button className="nav-cta" onClick={() => handleNav('/register')}>Get Started</button>
+              <button className="nav-signin" onClick={() => handleNav('Login')}>Sign In</button>
+              <button className="nav-cta" onClick={() => handleNav('Register')}>Get Started</button>
             </>
           )}
         </div>

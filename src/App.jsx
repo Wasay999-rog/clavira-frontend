@@ -1,5 +1,4 @@
-import { useState, lazy, Suspense } from 'react';
-import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Nav from './components/Nav.jsx';
 import Footer from './components/Footer.jsx';
 import Toast from './components/Toast.jsx';
@@ -25,9 +24,6 @@ const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage.jsx'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage.jsx'));
 const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage.jsx'));
 
-// Plaid
-const ConnectBankPage = lazy(() => import('./pages/ConnectBankPage.jsx'));
-
 function PageLoader() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
@@ -44,77 +40,80 @@ function PageLoader() {
   );
 }
 
-// Protected route wrapper
-function RequireAuth({ children }) {
-  const { isAuthenticated, loading } = useAuth();
-  if (loading) return <PageLoader />;
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
-  return children;
-}
-
-// Smart home: dashboard if logged in, landing if not
-function SmartHome({ showToast }) {
-  const { isAuthenticated, loading } = useAuth();
-  const navigate = useNavigate();
-  if (loading) return <PageLoader />;
-  if (isAuthenticated) return <DashboardPage navigate={navigate} showToast={showToast} />;
-  return <HomePage navigate={navigate} showToast={showToast} />;
-}
-
 function AppContent() {
-  const { user, isAuthenticated, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { user, isAuthenticated, loading: authLoading, logout } = useAuth();
+  const [page, setPage] = useState('Home');
   const [toast, setToast] = useState({ show: false, message: '' });
+
+  // URL params for verify/reset tokens
+  const [verifyToken, setVerifyToken] = useState(null);
+  const [resetToken, setResetToken] = useState(null);
+
+  // Check URL params on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const verify = params.get('verify');
+    const reset = params.get('reset');
+
+    if (verify) {
+      setVerifyToken(verify);
+      setPage('Verify Email');
+      window.history.replaceState({}, '', window.location.pathname);
+    } else if (reset) {
+      setResetToken(reset);
+      setPage('Reset Password');
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   const showToast = (message) => {
     setToast({ show: true, message });
     setTimeout(() => setToast({ show: false, message: '' }), 3500);
   };
 
-  const showChatbot = ['/', '/dashboard'].includes(location.pathname);
+  const navTo = (p) => {
+    setPage(p);
+  };
+
+  // Determine what "Home" means based on auth
+  const isHome = page === 'Home';
+  const showDashboard = isHome && isAuthenticated && !authLoading;
+  const showHomePage = isHome && !isAuthenticated && !authLoading;
+  const showHomeLoading = isHome && authLoading;
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <Nav
-        navigate={navigate}
+        page={page}
+        setPage={navTo}
         user={user}
         isAuthenticated={isAuthenticated}
         logout={logout}
-        currentPath={location.pathname}
       />
-      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+      <div key={page + (isAuthenticated ? '-auth' : '')} style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
         <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<SmartHome showToast={showToast} />} />
-            <Route path="/features" element={<FeaturesPage />} />
-            <Route path="/calculator" element={<CalculatorPage />} />
-            <Route path="/rewards" element={<RewardsPage navigate={navigate} />} />
-            <Route path="/credit-score" element={<CreditScorePage navigate={navigate} />} />
-            <Route path="/pricing" element={<PricingPage showToast={showToast} navigate={navigate} />} />
-            <Route path="/contact" element={<ContactPage showToast={showToast} />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/terms" element={<TermsPage />} />
+          {showHomeLoading && <PageLoader />}
+          {showHomePage && <HomePage setPage={navTo} showToast={showToast} />}
+          {showDashboard && <DashboardPage setPage={navTo} showToast={showToast} />}
+          {page === 'Features' && <FeaturesPage />}
+          {page === 'Calculator' && <CalculatorPage />}
+          {page === 'Rewards' && <RewardsPage />}
+          {page === 'Credit Score' && <CreditScorePage />}
+          {page === 'Pricing' && <PricingPage showToast={showToast} />}
+          {page === 'Contact' && <ContactPage showToast={showToast} />}
+          {page === 'Privacy' && <PrivacyPage />}
+          {page === 'Terms' && <TermsPage />}
 
-            {/* Auth */}
-            <Route path="/login" element={<LoginPage navigate={navigate} showToast={showToast} />} />
-            <Route path="/register" element={<RegisterPage navigate={navigate} showToast={showToast} />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage navigate={navigate} showToast={showToast} />} />
-            <Route path="/reset-password" element={<ResetPasswordPage navigate={navigate} showToast={showToast} />} />
-            <Route path="/verify-email" element={<VerifyEmailPage navigate={navigate} showToast={showToast} />} />
-
-            {/* Protected */}
-            <Route path="/connect-bank" element={
-              <RequireAuth><ConnectBankPage navigate={navigate} showToast={showToast} /></RequireAuth>
-            } />
-
-            {/* Catch all */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          {/* Auth pages */}
+          {page === 'Login' && <LoginPage setPage={navTo} showToast={showToast} />}
+          {page === 'Register' && <RegisterPage setPage={navTo} showToast={showToast} />}
+          {page === 'Forgot Password' && <ForgotPasswordPage setPage={navTo} showToast={showToast} />}
+          {page === 'Reset Password' && <ResetPasswordPage token={resetToken} setPage={navTo} showToast={showToast} />}
+          {page === 'Verify Email' && <VerifyEmailPage token={verifyToken} setPage={navTo} showToast={showToast} />}
         </Suspense>
-        <Footer navigate={navigate} />
+        <Footer setPage={navTo} />
       </div>
-      {showChatbot && (
+      {(showHomePage || showDashboard) && (
         <Suspense fallback={null}>
           <Chatbot />
         </Suspense>
