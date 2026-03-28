@@ -1,17 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { api } from '../api.js';
+import { useAuth } from '../components/AuthContext.jsx';
 import Section from '../components/Section.jsx';
 import './CalculatorPage.css';
-
-const INIT = [
-  { name: 'Amex Blue Cash Everyday', balance: 4118, apr: 21.24 },
-  { name: 'Citi Diamond Preferred', balance: 3918, apr: 27.49 },
-  { name: 'Chase Freedom Unlimited', balance: 1238, apr: 20.49 },
-  { name: 'Amazon Prime Store Card', balance: 1187, apr: 28.24 },
-  { name: 'Apple Card', balance: 635, apr: 24.49 },
-  { name: 'Discover it Cash Back', balance: 295, apr: 22.99 },
-  { name: 'Bank of America', balance: 152, apr: 18.24 },
-];
 
 const STRATS = [
   { key: 'avalanche', label: 'Avalanche', desc: 'Highest APR first', color: 'var(--blue)' },
@@ -21,22 +12,47 @@ const STRATS = [
 
 const aprColor = apr => apr >= 28 ? 'var(--red)' : apr >= 22 ? 'var(--gold)' : 'var(--green)';
 
-export default function CalculatorPage() {
-  const [cards, setCards] = useState(INIT);
+export default function CalculatorPage({ navigate }) {
+  const { user } = useAuth();
+  const [cards, setCards] = useState([]);
   const [extra, setExtra] = useState(200);
   const [strategy, setStrategy] = useState('hybrid');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingCards, setLoadingCards] = useState(true);
+
+  // Auto-load real credit cards from Plaid
+  useEffect(() => {
+    api.getAccounts()
+      .then(res => {
+        const creditCards = (res?.accounts || []).filter(a => a.type === 'credit' && a.balance > 0);
+        if (creditCards.length > 0) {
+          setCards(creditCards.map(c => ({
+            name: c.name,
+            balance: Math.round(c.balance * 100) / 100,
+            apr: c.subtype === 'credit card' ? 21.99 : 18.0, // Default APR — user can edit
+          })));
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoadingCards(false));
+  }, []);
+
   const totalDebt = useMemo(() => cards.reduce((s, c) => s + c.balance, 0), [cards]);
 
+  // Run simulation when cards/extra/strategy change
   useEffect(() => {
+    if (cards.length === 0) return;
     let cancelled = false;
     const run = async () => {
       setLoading(true);
-      try { const r = await api.compare(cards, extra, strategy); if (!cancelled) setData(r); } catch {}
+      try {
+        const r = await api.compare(cards, extra, strategy);
+        if (!cancelled) setData(r);
+      } catch {}
       finally { if (!cancelled) setLoading(false); }
     };
-    const t = setTimeout(run, 250);
+    const t = setTimeout(run, 300);
     return () => { cancelled = true; clearTimeout(t); };
   }, [cards, extra, strategy]);
 
@@ -70,10 +86,42 @@ export default function CalculatorPage() {
     return `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><text x="${pad}" y="${pad-8}" fill="#7C749A" font-size="10" font-family="Inter,sans-serif">$${Math.round(maxV).toLocaleString()}</text><text x="${w-pad}" y="${h-pad+16}" fill="#7C749A" font-size="10" font-family="Inter,sans-serif" text-anchor="end">${maxM}mo</text><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}" stroke="#1E1A36" stroke-width="1"/><line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="#1E1A36" stroke-width="1"/>${paths}${legend}</svg>`;
   }, [data, totalDebt]);
 
+  if (loadingCards) {
+    return (
+      <div className="calc-page"><Section>
+        <h1 className="pg-heading">Debt Payoff Calculator</h1>
+        <p className="pg-sub">Loading your cards...</p>
+      </Section></div>
+    );
+  }
+
+  if (cards.length === 0) {
+    return (
+      <div className="calc-page"><Section>
+        <h1 className="pg-heading">Debt Payoff Calculator</h1>
+        <p className="pg-sub">See how fast you can become debt-free</p>
+        <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>💳</div>
+          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>No credit cards found</h2>
+          <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
+            Connect your bank account to automatically load your credit cards, or the cards may have zero balance.
+          </p>
+          <button onClick={() => navigate('/connect-bank')} style={{
+            background: 'linear-gradient(135deg, var(--purple), var(--purple-light))',
+            border: 'none', color: '#fff', fontSize: 14, fontWeight: 700,
+            padding: '13px 28px', borderRadius: 12, cursor: 'pointer'
+          }}>
+            🏦 Connect Your Bank
+          </button>
+        </div>
+      </Section></div>
+    );
+  }
+
   return (
     <div className="calc-page"><Section>
       <h1 className="pg-heading">Debt Payoff Calculator</h1>
-      <p className="pg-sub">See how fast you can become debt-free</p>
+      <p className="pg-sub">Based on your actual credit cards · Edit APR if needed</p>
 
       <div className="calc-card">
         <div className="calc-th"><span>Card</span><span>Balance</span><span>APR %</span></div>
