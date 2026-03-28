@@ -1,18 +1,16 @@
 import './Footer.css';
 
-export default function Footer({ setPage }) {
+export default function Footer({ navigate }) {
   return (
     <footer className="footer">
-      <div className="footer-brand">
-        <div className="footer-icon">C</div>
-        <span>Clavira Finance</span>
+      <div className="footer-left">
+        <span className="footer-brand" onClick={() => navigate('/')}>© 2026 Clavira Finance</span>
       </div>
       <div className="footer-links">
-        <button className="footer-link" onClick={() => setPage('Privacy')}>Privacy Policy</button>
-        <span className="footer-dot">&middot;</span>
-        <button className="footer-link" onClick={() => setPage('Terms')}>Terms of Service</button>
+        <button onClick={() => navigate('/privacy')}>Privacy</button>
+        <button onClick={() => navigate('/terms')}>Terms</button>
+        <button onClick={() => navigate('/contact')}>Contact</button>
       </div>
-      <span className="footer-copy">&copy; 2026 Clavira Finance, Inc. All rights reserved.</span>
     </footer>
   );
 }

@@ -3,7 +3,7 @@ import { api } from '../api.js';
 import Section from '../components/Section.jsx';
 import './HomePage.css';
 
-export default function HomePage({ setPage, showToast }) {
+export default function HomePage({ navigate, showToast }) {
   const [email, setEmail] = useState('');
   const [dotOn, setDotOn] = useState(true);
   const [submitting, setSubmitting] = useState(false);
