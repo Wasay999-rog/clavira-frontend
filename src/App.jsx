@@ -28,7 +28,7 @@ const Chatbot = lazy(() => import('./components/Chatbot.jsx'));
 
 // Navs
 const VisitorNav = lazy(() => import('./components/VisitorNav.jsx'));
-const AppNav = lazy(() => import('./components/Appnav.jsx'));
+const AppNav = lazy(() => import('./components/AppNav.jsx'));
 
 // Footers
 const Footer = lazy(() => import('./components/Footer.jsx'));
