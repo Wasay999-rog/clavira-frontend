@@ -2,39 +2,47 @@ const BASE = import.meta.env.PROD
   ? 'https://clavira-backend.onrender.com/api'
   : '/api';
 
-const TOKEN_KEY = 'clavira_access_token';
-const REFRESH_KEY = 'clavira_refresh_token';
-const USER_KEY = 'clavira_user';
-
-export function getToken() { return localStorage.getItem(TOKEN_KEY); }
-export function getUser() { const raw = localStorage.getItem(USER_KEY); return raw ? JSON.parse(raw) : null; }
-export function setAuth(accessToken, refreshToken, user) {
-  if (accessToken) localStorage.setItem(TOKEN_KEY, accessToken);
-  if (refreshToken) localStorage.setItem(REFRESH_KEY, refreshToken);
-  if (user) localStorage.setItem(USER_KEY, JSON.stringify(user));
+function getToken() {
+  return localStorage.getItem('clavira_access_token') || '';
 }
-export function clearAuth() { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(REFRESH_KEY); localStorage.removeItem(USER_KEY); }
-export function isLoggedIn() { return !!getToken(); }
 
 async function request(path, options = {}) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (options.auth !== false) {
-    const token = getToken();
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+  const headers = { 'Content-Type': 'application/json', ...options.headers };
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
   }
-  delete options.auth;
 
-  const res = await fetch(`${BASE}${path}`, { headers, ...options });
+  const res = await fetch(`${BASE}${path}`, { ...options, headers });
 
-  if (res.status === 401 && !options._retried) {
-    const refreshed = await tryRefreshToken();
-    if (refreshed) {
-      headers['Authorization'] = `Bearer ${getToken()}`;
-      const retry = await fetch(`${BASE}${path}`, { headers, ...options, _retried: true });
-      if (retry.ok) return retry.json();
+  if (res.status === 401) {
+    // Try refresh
+    const refreshToken = localStorage.getItem('clavira_refresh_token');
+    if (refreshToken) {
+      try {
+        const refreshRes = await fetch(`${BASE}/auth/refresh`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refresh_token: refreshToken }),
+        });
+        if (refreshRes.ok) {
+          const data = await refreshRes.json();
+          localStorage.setItem('clavira_access_token', data.access_token);
+          // Retry original request with new token
+          headers['Authorization'] = `Bearer ${data.access_token}`;
+          const retryRes = await fetch(`${BASE}${path}`, { ...options, headers });
+          if (!retryRes.ok) {
+            const err = await retryRes.json().catch(() => ({ detail: 'Request failed' }));
+            throw err;
+          }
+          return retryRes.json();
+        }
+      } catch {
+        // Refresh failed — clear tokens
+        localStorage.removeItem('clavira_access_token');
+        localStorage.removeItem('clavira_refresh_token');
+      }
     }
-    clearAuth();
-    window.dispatchEvent(new Event('clavira:logout'));
   }
 
   if (!res.ok) {
@@ -44,75 +52,76 @@ async function request(path, options = {}) {
   return res.json();
 }
 
-async function tryRefreshToken() {
-  const refreshToken = localStorage.getItem(REFRESH_KEY);
-  if (!refreshToken) return false;
-  try {
-    const res = await fetch(`${BASE}/auth/refresh`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: refreshToken }),
-    });
-    if (!res.ok) return false;
-    const data = await res.json();
-    setAuth(data.access_token, null, data.user);
-    return true;
-  } catch { return false; }
-}
-
 export const api = {
   health: () => request('/health'),
 
   // Auth
-  register: (email, password, firstName, lastName = '') =>
-    request('/auth/register', { method: 'POST', body: JSON.stringify({ email, password, first_name: firstName, last_name: lastName }), auth: false }),
-  login: (email, password) =>
-    request('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }), auth: false }),
-  verifyEmail: (token) =>
-    request(`/auth/verify?token=${encodeURIComponent(token)}`, { auth: false }),
-  resendVerification: (email) =>
-    request('/auth/resend-verification', { method: 'POST', body: JSON.stringify({ email }), auth: false }),
-  forgotPassword: (email) =>
-    request('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }), auth: false }),
-  resetPassword: (token, password) =>
-    request('/auth/reset-password', { method: 'POST', body: JSON.stringify({ token, password }), auth: false }),
-  getMe: () => request('/auth/me'),
-  updateProfile: (firstName, lastName) =>
-    request('/auth/profile', { method: 'PUT', body: JSON.stringify({ first_name: firstName, last_name: lastName }) }),
+  register: (email, password, first_name, last_name) =>
+    request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ email, password, first_name, last_name }),
+    }),
 
-  // Plaid
-  createPlaidLink: () => request('/plaid/create-link-token', { method: 'POST' }),
-  exchangePlaidToken: (publicToken, institutionName) =>
-    request('/plaid/exchange-token', { method: 'POST', body: JSON.stringify({ public_token: publicToken, institution_name: institutionName }) }),
-  getAccounts: () => request('/plaid/accounts'),
-  disconnectAccount: (accountId) =>
-    request(`/plaid/accounts/${accountId}`, { method: 'DELETE' }),
-  getTransactions: () => request('/plaid/transactions'),
+  login: (email, password) =>
+    request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    }),
+
+  verifyCode: (email, code) =>
+    request('/auth/verify-code', {
+      method: 'POST',
+      body: JSON.stringify({ email, code }),
+    }),
+
+  resendVerification: (email) =>
+    request('/auth/resend-verification', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+
+  getMe: () => request('/auth/me'),
 
   // Simulation
   simulate: (cards, extraMonthly, strategy) =>
     request('/simulate', { method: 'POST', body: JSON.stringify({ cards, extra_monthly: extraMonthly, strategy }) }),
+
   compare: (cards, extraMonthly, strategy) =>
     request('/simulate/compare', { method: 'POST', body: JSON.stringify({ cards, extra_monthly: extraMonthly, strategy }) }),
 
   // Waitlist
   joinWaitlist: (email) =>
-    request('/waitlist', { method: 'POST', body: JSON.stringify({ email }), auth: false }),
-  waitlistCount: () => request('/waitlist/count', { auth: false }),
+    request('/waitlist', { method: 'POST', body: JSON.stringify({ email }) }),
+
+  waitlistCount: () => request('/waitlist/count'),
 
   // Contact
   submitContact: (data) =>
-    request('/contact', { method: 'POST', body: JSON.stringify(data), auth: false }),
+    request('/contact', { method: 'POST', body: JSON.stringify(data) }),
 
   // Pricing
   pricingSignup: (tier, email, name) =>
     request('/pricing/signup', { method: 'POST', body: JSON.stringify({ tier, email, name }) }),
-  getPricing: () => request('/pricing', { auth: false }),
 
-  // Chat
+  getPricing: () => request('/pricing'),
+
+  // AI Chat
   chat: (message, history) =>
     request('/chat', { method: 'POST', body: JSON.stringify({ message, history }) }),
 
-  // Data
+  // Rewards & Credit Score (now require auth — real data)
   getRewards: () => request('/rewards'),
   getCreditScore: () => request('/credit-score'),
+
+  // Plaid
+  createLinkToken: () => request('/plaid/create-link-token', { method: 'POST' }),
+  exchangeToken: (public_token, institution_name) =>
+    request('/plaid/exchange-token', {
+      method: 'POST',
+      body: JSON.stringify({ public_token, institution_name }),
+    }),
+  getAccounts: () => request('/plaid/accounts'),
+  getTransactions: () => request('/plaid/transactions'),
+  disconnectAccount: (accountId) =>
+    request(`/plaid/accounts/${accountId}`, { method: 'DELETE' }),
 };
