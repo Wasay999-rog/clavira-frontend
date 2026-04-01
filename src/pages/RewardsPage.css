@@ -1,4 +1,3 @@
-/* ─── Rewards Page ─── */
 .rewards-page { padding: 32px 0 60px; }
 
 .pg-heading {
@@ -9,7 +8,6 @@
   color: var(--muted); font-size: 15px; margin-bottom: 32px; line-height: 1.5;
 }
 
-/* Empty State */
 .rew-empty {
   text-align: center; padding: 60px 24px;
   background: var(--surface); border-radius: 20px;
@@ -18,8 +16,8 @@
 .rew-empty-icon { font-size: 48px; margin-bottom: 16px; }
 .rew-empty-text { color: var(--text); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
 .rew-empty-sub { color: var(--muted); font-size: 14px; max-width: 400px; margin: 0 auto; line-height: 1.6; }
+.rew-empty-inline { color: var(--muted); font-size: 14px; padding: 20px; text-align: center; }
 
-/* Summary Strip */
 .rew-summary {
   display: flex; gap: 16px; margin-bottom: 36px;
 }
@@ -34,14 +32,19 @@
 .rew-s-val.green { color: var(--green); }
 .rew-s-val.gold { color: var(--gold); }
 
-/* Section Title */
 .rew-section-title {
   font-size: 18px; font-weight: 700; color: var(--text);
   margin: 0 0 16px; padding-bottom: 8px;
   border-bottom: 1px solid rgba(124,58,237,0.1);
+  display: flex; align-items: center; gap: 10px;
 }
 
-/* Spending Breakdown (donut + list) */
+.rew-premium-badge {
+  font-size: 11px; font-weight: 700; color: var(--gold);
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);
+  padding: 2px 10px; border-radius: 6px; margin-left: auto;
+}
+
 .rew-spending-grid {
   display: flex; gap: 32px; align-items: flex-start;
   background: var(--surface); border-radius: 16px;
@@ -63,7 +66,53 @@
 .rew-spend-amount { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
 .rew-spend-pct { color: var(--muted); font-size: 12px; width: 36px; text-align: right; }
 
-/* Cards Grid */
+.rew-locked-section {
+  position: relative; overflow: hidden;
+  background: var(--surface); border-radius: 16px;
+  border: 1px solid rgba(124,58,237,0.08);
+  margin-bottom: 36px; min-height: 180px;
+}
+.rew-locked-blur {
+  padding: 24px; filter: blur(6px); opacity: 0.4;
+  pointer-events: none;
+}
+.rew-locked-fake-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.rew-locked-bar {
+  height: 8px; background: var(--purple); border-radius: 4px;
+  flex-shrink: 0;
+}
+.rew-locked-fake-row span {
+  color: var(--muted); font-size: 13px; min-width: 60px;
+}
+.rew-locked-fake-tip {
+  color: var(--muted); font-size: 14px; padding: 12px 0;
+  border-bottom: 1px solid rgba(124,58,237,0.06);
+}
+.rew-locked-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: rgba(22,19,39,0.6);
+  backdrop-filter: blur(2px);
+  padding: 24px;
+}
+.rew-locked-icon { font-size: 36px; margin-bottom: 12px; }
+.rew-locked-text {
+  color: var(--text); font-size: 15px; font-weight: 600;
+  text-align: center; margin-bottom: 16px; max-width: 280px;
+  line-height: 1.5;
+}
+.rew-locked-btn {
+  background: linear-gradient(135deg, #7C3AED, #8B5CF6);
+  color: #fff; border: none; font-size: 14px; font-weight: 700;
+  padding: 12px 28px; border-radius: 10px; cursor: pointer;
+  transition: opacity 0.2s;
+}
+.rew-locked-btn:hover { opacity: 0.9; }
+
 .rew-cards-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px; margin-bottom: 36px;
@@ -91,7 +140,6 @@
   padding: 4px 10px; border-radius: 20px; white-space: nowrap;
 }
 
-/* Tips */
 .rew-tips { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
 .rew-tip {
   display: flex; align-items: flex-start; gap: 12px;
@@ -107,20 +155,6 @@
 .rew-tip-impact.low { background: rgba(124,58,237,0.12); color: var(--purple-lighter); }
 .rew-tip-text { font-size: 14px; color: var(--text); line-height: 1.5; }
 
-/* Category Map (reused from spending) */
-.rew-cat-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 10px; margin-bottom: 36px;
-}
-.rew-cat-item {
-  background: var(--surface); border-radius: 12px; padding: 14px;
-  border: 1px solid rgba(124,58,237,0.06);
-}
-.rew-cat-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-.rew-cat-card { font-size: 12px; color: var(--muted); }
-.rew-cat-rate { font-size: 13px; color: var(--green); font-weight: 600; margin-top: 4px; }
-
-/* Mobile */
 @media (max-width: 768px) {
   .rew-summary { flex-direction: column; }
   .rew-spending-grid { flex-direction: column; align-items: center; }

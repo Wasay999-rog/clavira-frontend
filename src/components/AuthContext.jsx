@@ -1,74 +1,110 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { api, setAuth, clearAuth, getUser, isLoggedIn } from '../api';
 
 const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => getUser());
-  const [loading, setLoading] = useState(true);
+var IDLE_TIMEOUT_MS = 15 * 60 * 1000;
 
-  useEffect(() => {
+export function AuthProvider({ children }) {
+  var [user, setUser] = useState(function() { return getUser(); });
+  var [loading, setLoading] = useState(true);
+  var idleTimer = useRef(null);
+
+  useEffect(function() {
     if (isLoggedIn()) {
+      if (!sessionStorage.getItem('clavira_session_active')) {
+        clearAuth();
+        setUser(null);
+        setLoading(false);
+        return;
+      }
       api.getMe()
-        .then(data => {
+        .then(function(data) {
           setUser(data.user);
           setAuth(null, null, data.user);
         })
-        .catch(() => {
+        .catch(function() {
           clearAuth();
           setUser(null);
         })
-        .finally(() => setLoading(false));
+        .finally(function() { setLoading(false); });
     } else {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    const handler = () => {
+  useEffect(function() {
+    var handler = function() {
       setUser(null);
       clearAuth();
+      sessionStorage.removeItem('clavira_session_active');
     };
     window.addEventListener('clavira:logout', handler);
-    return () => window.removeEventListener('clavira:logout', handler);
+    return function() { window.removeEventListener('clavira:logout', handler); };
   }, []);
 
-  const login = useCallback(async (email, password) => {
-    const data = await api.login(email, password);
+  var resetIdleTimer = useCallback(function() {
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    if (isLoggedIn()) {
+      idleTimer.current = setTimeout(function() {
+        clearAuth();
+        setUser(null);
+        sessionStorage.removeItem('clavira_session_active');
+        window.location.href = '/login';
+      }, IDLE_TIMEOUT_MS);
+    }
+  }, []);
+
+  useEffect(function() {
+    if (!user) return;
+    var events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
+    events.forEach(function(e) { window.addEventListener(e, resetIdleTimer, { passive: true }); });
+    resetIdleTimer();
+    return function() {
+      events.forEach(function(e) { window.removeEventListener(e, resetIdleTimer); });
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    };
+  }, [user, resetIdleTimer]);
+
+  var login = useCallback(async function(email, password) {
+    var data = await api.login(email, password);
     setAuth(data.access_token, data.refresh_token, data.user);
     setUser(data.user);
+    sessionStorage.setItem('clavira_session_active', '1');
     return data;
   }, []);
 
-  const register = useCallback(async (email, password, firstName, lastName) => {
-    const data = await api.register(email, password, firstName, lastName);
+  var register = useCallback(async function(email, password, firstName, lastName) {
+    var data = await api.register(email, password, firstName, lastName);
     setAuth(data.access_token, data.refresh_token, data.user);
     setUser(data.user);
+    sessionStorage.setItem('clavira_session_active', '1');
     return data;
   }, []);
 
-  const logout = useCallback(() => {
+  var logout = useCallback(function() {
     clearAuth();
     setUser(null);
+    sessionStorage.removeItem('clavira_session_active');
   }, []);
 
-  const refreshUser = useCallback(async () => {
+  var refreshUser = useCallback(async function() {
     try {
-      const data = await api.getMe();
+      var data = await api.getMe();
       setUser(data.user);
       setAuth(null, null, data.user);
-    } catch { /* silent */ }
+    } catch (e) { /* silent */ }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user: user, loading: loading, login: login, register: register, logout: logout, refreshUser: refreshUser, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext);
+  var ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
 }

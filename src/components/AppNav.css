@@ -1,8 +1,8 @@
 .app-nav{background:rgba(7,6,14,.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(124,58,237,.1);position:sticky;top:0;z-index:1000}
 .app-nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;gap:8px}
 .app-nav-brand{display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:0;margin-right:16px}
-.app-nav-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#7C3AED,#8B5CF6);color:#fff;font-weight:800;font-size:16px;line-height:32px;text-align:center}
-.app-nav-name{color:#F0EEFF;font-size:16px;font-weight:800;letter-spacing:-.02em}
+.app-nav-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#7C3AED,#8B5CF6);color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center}
+.app-nav-name{color:#F0EEFF;font-size:17px;font-weight:800;letter-spacing:-.02em}
 .app-nav-links{display:flex;align-items:center;gap:2px;flex:1}
 .app-nav-item{display:flex;align-items:center;gap:6px;background:none;border:none;color:#7C749A;font-size:13px;font-weight:500;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
 .app-nav-item:hover{color:#F0EEFF;background:rgba(124,58,237,.08)}
@@ -10,7 +10,7 @@
 .app-nav-item-icon{font-size:15px}
 .app-nav-item-label{font-size:13px}
 .app-nav-right{display:flex;align-items:center;gap:10px;margin-left:auto}
-.app-nav-upgrade{background:linear-gradient(135deg,#F59E0B,#D97706);border:none;color:#fff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:opacity .2s;white-space:nowrap}
+.app-nav-upgrade{background:linear-gradient(135deg,#7C3AED,#8B5CF6);border:none;color:#fff;font-size:12px;font-weight:700;padding:7px 16px;border-radius:8px;cursor:pointer;transition:opacity .2s;white-space:nowrap}
 .app-nav-upgrade:hover{opacity:.9}
 .app-nav-user-wrap{position:relative}
 .app-nav-user-btn{display:flex;align-items:center;gap:8px;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);border-radius:10px;padding:5px 12px 5px 5px;cursor:pointer;transition:all .2s}
@@ -28,6 +28,8 @@
 .app-nav-dd-divider{height:1px;background:rgba(124,58,237,.1)}
 .app-nav-dd-item{display:block;width:100%;text-align:left;background:none;border:none;color:#9B93B7;font-size:13px;padding:11px 16px;cursor:pointer;transition:all .15s;font-family:inherit}
 .app-nav-dd-item:hover{background:rgba(124,58,237,.08);color:#F0EEFF}
+.app-nav-dd-upgrade{color:#A78BFA;font-weight:600}
+.app-nav-dd-upgrade:hover{background:rgba(124,58,237,.12);color:#C4B5FD}
 .app-nav-mobile-user{display:none}
 .app-nav-upgrade-mobile{display:none}
 .app-nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;z-index:1001}
@@ -44,5 +46,5 @@
 .app-nav-mobile-user{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:12px;padding-top:12px;border-top:1px solid rgba(124,58,237,.1)}
 .app-nav-mobile-info{display:flex;justify-content:space-between;align-items:center;color:#F0EEFF;font-size:14px;font-weight:600;padding:4px 0}
 .app-nav-mobile-tier{font-size:11px;font-weight:700}
-.app-nav-upgrade-mobile{display:block;background:linear-gradient(135deg,#F59E0B,#D97706);border:none;color:#fff;font-size:13px;font-weight:700;padding:10px;border-radius:10px;cursor:pointer;width:100%}
+.app-nav-upgrade-mobile{display:block;background:linear-gradient(135deg,#7C3AED,#8B5CF6);border:none;color:#fff;font-size:13px;font-weight:700;padding:10px;border-radius:10px;cursor:pointer;width:100%}
 }
