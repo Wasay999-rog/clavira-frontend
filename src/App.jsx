@@ -63,7 +63,23 @@ function AppContent() {
   if (authLoading) return <PageLoader />;
 
   // ═══════════════════════════════════
-  // LOGGED IN — APP EXPERIENCE
+  // LOGGED IN BUT NOT VERIFIED — FORCE VERIFICATION
+  // ═══════════════════════════════════
+  if (isAuthenticated && user && !user.is_verified) {
+    return (
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+          <Suspense fallback={<PageLoader />}>
+            <VerifyEmailPage navigate={navigate} showToast={showToast} />
+          </Suspense>
+        </div>
+        <Toast message={toast.message} show={toast.show} />
+      </div>
+    );
+  }
+
+  // ═══════════════════════════════════
+  // LOGGED IN + VERIFIED — FULL APP
   // ═══════════════════════════════════
   if (isAuthenticated) {
     return (
@@ -79,6 +95,7 @@ function AppContent() {
               <Route path="/rewards" element={<RewardsPage navigate={navigate} />} />
               <Route path="/credit-score" element={<CreditScorePage navigate={navigate} />} />
               <Route path="/connect-bank" element={<ConnectBankPage navigate={navigate} showToast={showToast} />} />
+              <Route path="/pricing" element={<PricingPage showToast={showToast} navigate={navigate} />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/verify-email" element={<VerifyEmailPage navigate={navigate} showToast={showToast} />} />
@@ -86,7 +103,6 @@ function AppContent() {
               <Route path="/login" element={<Navigate to="/" replace />} />
               <Route path="/register" element={<Navigate to="/" replace />} />
               <Route path="/features" element={<Navigate to="/" replace />} />
-              <Route path="/pricing" element={<Navigate to="/" replace />} />
               <Route path="/contact" element={<Navigate to="/" replace />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
