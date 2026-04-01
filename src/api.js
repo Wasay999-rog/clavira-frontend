@@ -106,6 +106,7 @@ export const api = {
   },
   getRewards: function() { return request('/rewards'); },
   getCreditScore: function() { return request('/credit-score'); },
+  getPayoffStrategy: function() { return request('/payoff-strategy'); },
   createLinkToken: function() { return request('/plaid/create-link-token', { method: 'POST' }); },
   exchangeToken: function(public_token, institution_name) {
     return request('/plaid/exchange-token', { method: 'POST', body: JSON.stringify({ public_token: public_token, institution_name: institution_name }) });

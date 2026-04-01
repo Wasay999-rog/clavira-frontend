@@ -3,7 +3,8 @@ import { useAuth } from '../components/AuthContext';
 import { api } from '../api';
 import Section from '../components/Section.jsx';
 import './DashboardPage.css';
-
+import PayoffStrategy from '../components/PayoffStrategy.jsx';
+import '../components/PayoffStrategy.css';
 export default function DashboardPage({ navigate, showToast }) {
   const { user } = useAuth();
   const [accounts, setAccounts] = useState([]);
@@ -425,7 +426,12 @@ export default function DashboardPage({ navigate, showToast }) {
           </div>
         </Section>
       )}
-
+       {/* Smart Payoff Plan */}
+      {hasLinked && totalCreditUsed > 0 && (
+        <Section style={{ paddingTop: 24, paddingBottom: 0 }}>
+          <PayoffStrategy navigate={navigate} isPremium={isPremium} />
+        </Section>
+      )}
       {/* Quick Actions */}
       <Section style={{ paddingTop: 24, paddingBottom: 60 }}>
         <div className="dash-section-header">
