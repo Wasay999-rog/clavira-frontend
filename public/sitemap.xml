@@ -6,33 +6,31 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://clavirafinance.com/#features</loc>
+    <loc>https://clavirafinance.com/features</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://clavirafinance.com/#calculator</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://clavirafinance.com/#rewards</loc>
+    <loc>https://clavirafinance.com/pricing</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://clavirafinance.com/#credit-score</loc>
+    <loc>https://clavirafinance.com/contact</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://clavirafinance.com/#pricing</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://clavirafinance.com/#contact</loc>
+    <loc>https://clavirafinance.com/login</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://clavirafinance.com/register</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://clavirafinance.com/privacy</loc>    <loc>https://clavirafinance.com/privacy</loc>    <loc>https://clavirafi      <loc>https://clavi/clavirafinance.c    <loc>https://clavirafinance.com/privacy</loc>    <loc>hority>0.3</priority>
   </url>
 </urlset>
