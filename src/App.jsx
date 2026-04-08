@@ -1,5 +1,6 @@
 import { useState, lazy, Suspense } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Toast from './components/Toast.jsx';
 import { AuthProvider, useAuth } from './components/AuthContext.jsx';
 
@@ -159,6 +160,7 @@ export default function App() {
   return (
     <AuthProvider>
       <AppContent />
+      <Analytics />
     </AuthProvider>
   );
 }
