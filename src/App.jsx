@@ -10,6 +10,9 @@ const PricingPage = lazy(() => import('./pages/PricingPage.jsx'));
 const ContactPage = lazy(() => import('./pages/ContactPage.jsx'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage.jsx'));
 const TermsPage = lazy(() => import('./pages/TermsPage.jsx'));
+const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
+const BlogPage = lazy(() => import('./pages/BlogPage.jsx'));
+const FAQPage = lazy(() => import('./pages/FAQPage.jsx'));
 
 // Auth pages
 const LoginPage = lazy(() => import('./pages/LoginPage.jsx'));
@@ -133,6 +136,9 @@ function AppContent() {
             <Route path="/contact" element={<ContactPage showToast={showToast} />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/about" element={<AboutPage navigate={navigate} />} />
+            <Route path="/blog" element={<BlogPage navigate={navigate} />} />
+            <Route path="/faq" element={<FAQPage navigate={navigate} />} />
             <Route path="/login" element={<LoginPage navigate={navigate} showToast={showToast} />} />
             <Route path="/register" element={<RegisterPage navigate={navigate} showToast={showToast} />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage navigate={navigate} showToast={showToast} />} />
