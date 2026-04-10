@@ -12,6 +12,7 @@ const PrivacyPage = lazy(() => import('./pages/PrivacyPage.jsx'));
 const TermsPage = lazy(() => import('./pages/TermsPage.jsx'));
 const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
 const BlogPage = lazy(() => import('./pages/BlogPage.jsx'));
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage.jsx'));
 const FAQPage = lazy(() => import('./pages/FAQPage.jsx'));
 
 // Auth pages
@@ -101,6 +102,13 @@ function AppContent() {
               <Route path="/pricing" element={<PricingPage showToast={showToast} navigate={navigate} />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />
+              <Route path="/blog" element={<BlogPage navigate={navigate} />} />
+              <Route path="/blog/two-card-wallet" element={<BlogPostPage navigate={navigate} slug="two-card-wallet" />} />
+              <Route path="/blog/thirty-percent-rule" element={<BlogPostPage navigate={navigate} slug="thirty-percent-rule" />} />
+              <Route path="/blog/avalanche-vs-snowball" element={<BlogPostPage navigate={navigate} slug="avalanche-vs-snowball" />} />
+              <Route path="/blog/transfer-partners-101" element={<BlogPostPage navigate={navigate} slug="transfer-partners-101" />} />
+              <Route path="/blog/debt-free-story" element={<BlogPostPage navigate={navigate} slug="debt-free-story" />} />
+              <Route path="/blog/how-ai-works" element={<BlogPostPage navigate={navigate} slug="how-ai-works" />} />
               <Route path="/verify-email" element={<VerifyEmailPage navigate={navigate} showToast={showToast} />} />
               {/* Redirect marketing pages to dashboard */}
               <Route path="/login" element={<Navigate to="/" replace />} />
@@ -138,6 +146,12 @@ function AppContent() {
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/about" element={<AboutPage navigate={navigate} />} />
             <Route path="/blog" element={<BlogPage navigate={navigate} />} />
+            <Route path="/blog/two-card-wallet" element={<BlogPostPage navigate={navigate} slug="two-card-wallet" />} />
+            <Route path="/blog/thirty-percent-rule" element={<BlogPostPage navigate={navigate} slug="thirty-percent-rule" />} />
+            <Route path="/blog/avalanche-vs-snowball" element={<BlogPostPage navigate={navigate} slug="avalanche-vs-snowball" />} />
+            <Route path="/blog/transfer-partners-101" element={<BlogPostPage navigate={navigate} slug="transfer-partners-101" />} />
+            <Route path="/blog/debt-free-story" element={<BlogPostPage navigate={navigate} slug="debt-free-story" />} />
+            <Route path="/blog/how-ai-works" element={<BlogPostPage navigate={navigate} slug="how-ai-works" />} />
             <Route path="/faq" element={<FAQPage navigate={navigate} />} />
             <Route path="/login" element={<LoginPage navigate={navigate} showToast={showToast} />} />
             <Route path="/register" element={<RegisterPage navigate={navigate} showToast={showToast} />} />

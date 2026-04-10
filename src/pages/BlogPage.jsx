@@ -5,37 +5,37 @@ const POSTS = [
     id: 1, category: 'Strategy', emoji: '💳', color: '#7C3AED', featured: true,
     title: 'The 2-Card Wallet: Why Most Americans Are Leaving $2,000/Year on the Table',
     excerpt: 'Using one card for everything sounds simple. But it\'s quietly costing you thousands. Here\'s the exact 2-card combo most people should be using.',
-    readTime: '5 min read', date: 'Apr 2026',
+    readTime: '5 min read', date: 'Apr 2026', slug: 'two-card-wallet',
   },
   {
     id: 2, category: 'Credit Score', emoji: '📈', color: '#10B981',
     title: 'The 30% Rule: The Single Most Impactful Thing You Can Do For Your Credit Score',
     excerpt: 'Credit utilization makes up 30% of your FICO score. Here\'s how to use it to your advantage.',
-    readTime: '4 min read', date: 'Apr 2026',
+    readTime: '4 min read', date: 'Apr 2026', slug: 'thirty-percent-rule',
   },
   {
     id: 3, category: 'Debt Payoff', emoji: '🏔️', color: '#3B82F6',
     title: 'Avalanche vs Snowball: Which Debt Payoff Method Actually Works?',
     excerpt: 'The math says Avalanche. The psychology says Snowball. We analyzed 10,000 payoff scenarios.',
-    readTime: '6 min read', date: 'Mar 2026',
+    readTime: '6 min read', date: 'Mar 2026', slug: 'avalanche-vs-snowball',
   },
   {
     id: 4, category: 'Rewards', emoji: '✈️', color: '#F59E0B',
     title: 'Transfer Partners 101: How to Make Your Points Worth 2x More',
     excerpt: 'Most people redeem points for cash back at 1¢ each. Transfer partners can make them worth 2–3¢.',
-    readTime: '7 min read', date: 'Mar 2026',
+    readTime: '7 min read', date: 'Mar 2026', slug: 'transfer-partners-101',
   },
   {
     id: 5, category: 'Success Story', emoji: '🎉', color: '#10B981',
     title: 'From $18,000 in Debt to Debt-Free: A Real Clavira User Story',
     excerpt: 'How one user eliminated $18,000 in credit card debt in 22 months while improving their credit score by 87 points.',
-    readTime: '8 min read', date: 'Mar 2026',
+    readTime: '8 min read', date: 'Mar 2026', slug: 'debt-free-story',
   },
   {
     id: 6, category: 'Strategy', emoji: '🤖', color: '#A78BFA',
     title: 'How Clavira\'s AI Analyzes Your Spending (And What It\'s Looking For)',
     excerpt: 'A behind-the-scenes look at our 7-factor payoff engine and 50-card optimization algorithm.',
-    readTime: '5 min read', date: 'Feb 2026',
+    readTime: '5 min read', date: 'Feb 2026', slug: 'how-ai-works',
   },
 ];
 
@@ -45,8 +45,8 @@ export default function BlogPage({ navigate }) {
   const featured = POSTS.find(p => p.featured);
   const regular = POSTS.filter(p => !p.featured);
 
-  const handlePost = () => {
-    window.open('https://clavirafinance.com', '_blank');
+  const handlePost = (post) => {
+    navigate(`/blog/${post.slug}`);
   };
 
   return (
@@ -67,7 +67,7 @@ export default function BlogPage({ navigate }) {
       {featured && (
         <Section>
           <div
-            onClick={handlePost}
+            onClick={() => handlePost(featured)}
             style={{
               background: 'linear-gradient(135deg, #1A0E3A, #0F0D1F)',
               border: '1px solid rgba(124,58,237,0.25)',
@@ -108,7 +108,7 @@ export default function BlogPage({ navigate }) {
           {regular.map(post => (
             <div
               key={post.id}
-              onClick={handlePost}
+              onClick={() => handlePost(post)}
               style={{
                 background: '#0F0D1F', border: '1px solid rgba(124,58,237,0.1)',
                 borderRadius: 20, padding: 24, cursor: 'pointer',
