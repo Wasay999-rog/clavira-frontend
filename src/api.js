@@ -116,5 +116,12 @@ export const api = {
   disconnectAccount: function(accountId) {
     return request('/plaid/accounts/' + accountId, { method: 'DELETE' });
   },
-  getOptimizer: function() { return request('/cards/optimize'); },
-};
+getOptimizer: function() { return request('/cards/optimize'); },
+createCheckout: function(tier, coupon_code) {
+  return request('/stripe/create-checkout', {
+    method: 'POST',
+    body: JSON.stringify({ tier, coupon_code })
+  });
+},
+getSubscription: function() { return request('/stripe/subscription'); },
+getPortal: function() { return request('/stripe/portal'); },};
