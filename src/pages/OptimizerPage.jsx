@@ -436,27 +436,62 @@ export default function OptimizerPage({ navigate }) {
               ))}
             </div>
 
-            {/* Cards list — blurred for free users on recommended tab */}
-            <div style={{ position: 'relative' }}>
-              {currentCards.map((card, i) => (
-                <CardResult
-                  key={card.card_id}
-                  card={card}
-                  isNew={activeTab === 'recommended'}
-                  rank={activeTab === 'recommended' ? i + 1 : null}
-                />
-              ))}
-              {!isPremium && activeTab === 'recommended' && currentCards.length > 0 && (
-                <div style={{ position: 'relative', filter: 'blur(4px)', pointerEvents: 'none' }}>
-                  {currentCards.slice(1).map((card, i) => (
-                    <CardResult key={i} card={card} isNew rank={i + 2} />
+            {/* Cards list */}
+            <div>
+              {activeTab === 'recommended' && !isPremium ? (
+                <>
+                  {/* Show only first card for free users */}
+                  {currentCards.slice(0, 1).map((card, i) => (
+                    <CardResult key={card.card_id} card={card} isNew rank={1} />
                   ))}
-                </div>
-              )}
-              {!isPremium && activeTab === 'recommended' && (
-                <div style={{ position: 'relative', marginTop: -200 }}>
-                  <PremiumLock navigate={navigate} />
-                </div>
+
+                  {/* Clean lock section */}
+                  <div style={{
+                    background: 'linear-gradient(135deg, #1A0E3A, #0F0D1F)',
+                    border: '1px solid rgba(124,58,237,0.25)',
+                    borderRadius: 20, padding: 40,
+                    textAlign: 'center', marginTop: 12,
+                  }}>
+                    <div style={{ fontSize: 36, marginBottom: 16 }}>🔒</div>
+                    <h3 style={{ color: '#F0EEFF', fontWeight: 800, fontSize: 22, marginBottom: 12 }}>
+                      {currentCards.length - 1} More Card{currentCards.length - 1 !== 1 ? 's' : ''} + 2-Card Combo Strategy
+                    </h3>
+                    <p style={{ color: '#6B6490', fontSize: 15, lineHeight: 1.7, marginBottom: 8, maxWidth: 420, margin: '0 auto 8px' }}>
+                      Upgrade to Premium to unlock:
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 340, margin: '0 auto 28px', textAlign: 'left' }}>
+                      {[
+                        `✦ ${currentCards.length - 1} more card recommendations ranked for your spending`,
+                        '✦ Optimal 2-card wallet strategy',
+                        '✦ Transfer partner analysis (points worth 2x more)',
+                        '✦ Step-by-step redemption guides',
+                      ].map((f, i) => (
+                        <div key={i} style={{ color: '#A78BFA', fontSize: 14, fontWeight: 500 }}>{f}</div>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => navigate('/pricing')}
+                      style={{
+                        background: 'linear-gradient(135deg, #7C3AED, #8B5CF6)',
+                        color: '#fff', border: 'none', borderRadius: 12,
+                        padding: '14px 32px', fontSize: 15, fontWeight: 700,
+                        cursor: 'pointer', marginBottom: 12,
+                      }}
+                    >
+                      Upgrade to Premium →
+                    </button>
+                    <div style={{ color: '#4A4368', fontSize: 13 }}>$9.99/month · Cancel anytime</div>
+                  </div>
+                </>
+              ) : (
+                currentCards.map((card, i) => (
+                  <CardResult
+                    key={card.card_id}
+                    card={card}
+                    isNew={activeTab === 'recommended'}
+                    rank={activeTab === 'recommended' ? i + 1 : null}
+                  />
+                ))
               )}
             </div>
 
