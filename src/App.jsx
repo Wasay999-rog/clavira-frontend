@@ -28,6 +28,7 @@ const CalculatorPage = lazy(() => import('./pages/CalculatorPage.jsx'));
 const RewardsPage = lazy(() => import('./pages/RewardsPage.jsx'));
 const CreditScorePage = lazy(() => import('./pages/CreditScorePage.jsx'));
 const ConnectBankPage = lazy(() => import('./pages/ConnectBankPage.jsx'));
+const OptimizerPage = lazy(() => import('./pages/OptimizerPage.jsx'));
 const Chatbot = lazy(() => import('./components/Chatbot.jsx'));
 
 // Navs
@@ -99,6 +100,7 @@ function AppContent() {
               <Route path="/rewards" element={<RewardsPage navigate={navigate} />} />
               <Route path="/credit-score" element={<CreditScorePage navigate={navigate} />} />
               <Route path="/connect-bank" element={<ConnectBankPage navigate={navigate} showToast={showToast} />} />
+              <Route path="/optimizer" element={<OptimizerPage navigate={navigate} />} />
               <Route path="/pricing" element={<PricingPage showToast={showToast} navigate={navigate} />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />

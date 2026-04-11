@@ -54,7 +54,7 @@ export default function HomePage({ navigate, showToast }) {
               <span>🔒 Encrypted</span><span>🚀 Free to start</span><span>⚡ 2min setup</span>
             </div>
             <div className="hero-stats">
-              {[{ val: '$612', label: 'saved/year' }, { val: '8mo', label: 'faster debt-free' }, { val: '4.9★', label: 'user rating' }].map(s => (
+              {[{ val: '$612', label: 'avg. rewards gained/year' }, { val: '8mo', label: 'faster than min. payments' }, { val: '50+', label: 'cards analyzed' }].map(s => (
                 <div key={s.label} className="hero-stat">
                   <div className="hero-stat-val">{s.val}</div>
                   <div className="hero-stat-label">{s.label}</div>

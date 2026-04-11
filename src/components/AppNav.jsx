@@ -14,6 +14,7 @@ export default function AppNav({ navigate, user, logout, currentPath }) {
     { icon: '\u{1F3C6}', label: 'Rewards', path: '/rewards' },
     { icon: '\u{1F4C8}', label: 'Credit Score', path: '/credit-score' },
     { icon: '\u{1F3E6}', label: 'Accounts', path: '/connect-bank' },
+    { icon: '✦', label: 'Optimizer', path: '/optimizer' },
   ];
 
   function handleNav(path) { navigate(path); setMobileOpen(false); setUserMenuOpen(false); }

@@ -1,3 +1,16 @@
 User-agent: *
 Allow: /
+
+# Block admin and auth pages from indexing
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /dashboard
+Disallow: /calculator
+Disallow: /rewards
+Disallow: /credit-score
+Disallow: /connect-bank
+
 Sitemap: https://clavirafinance.com/sitemap.xml

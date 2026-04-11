@@ -116,4 +116,5 @@ export const api = {
   disconnectAccount: function(accountId) {
     return request('/plaid/accounts/' + accountId, { method: 'DELETE' });
   },
+  getOptimizer: function() { return request('/cards/optimize'); },
 };
