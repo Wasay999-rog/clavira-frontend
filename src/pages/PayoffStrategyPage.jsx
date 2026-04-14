@@ -273,22 +273,29 @@ export default function PayoffStrategyPage({ navigate }) {
         {/* Month by month */}
         {plan.monthly_detail?.length > 0 && (
           <div style={{ marginBottom: 28 }}>
-            <div style={{ color: '#A78BFA', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>Month-by-Month Plan</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <div style={{ color: '#A78BFA', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                Month-by-Month Plan — {SCENARIOS.find(s => s.key === activeScenario)?.label}
+              </div>
+            </div>
+
+            {/* Active scenario summary */}
             {activeData && (
-              <div style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 16 }}>
                 {[
                   { label: 'Monthly Payment', value: `$${activeData.monthly_payment?.toLocaleString(undefined, {maximumFractionDigits: 0})}`, color: '#A78BFA' },
                   { label: 'Months to Payoff', value: `${activeData.months} months`, color: '#7C3AED' },
                   { label: 'Total Interest', value: `$${activeData.total_interest?.toLocaleString()}`, color: '#F43F5E' },
                   { label: 'Debt-Free Date', value: activeData.debt_free_date, color: '#10B981' },
                 ].map((s, i) => (
-                  <div key={i} style={{ background: '#0F0D1F', border: '1px solid rgba(124,58,237,0.1)', borderRadius: 12, padding: '12px 16px', flex: 1, minWidth: 140 }}>
+                  <div key={i} style={{ background: '#0F0D1F', border: '1px solid rgba(124,58,237,0.1)', borderRadius: 12, padding: '12px 16px' }}>
                     <div style={{ color: '#6B6490', fontSize: 11, marginBottom: 4 }}>{s.label}</div>
                     <div style={{ color: s.color, fontWeight: 700, fontSize: 16 }}>{s.value}</div>
                   </div>
                 ))}
               </div>
             )}
+
             <div style={{ background: '#0F0D1F', border: '1px solid rgba(124,58,237,0.1)', borderRadius: 16, overflow: 'hidden' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
