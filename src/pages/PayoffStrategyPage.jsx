@@ -271,7 +271,7 @@ export default function PayoffStrategyPage({ navigate }) {
         </div>
 
         {/* Month by month */}
-        {plan.monthly_detail?.length > 0 && (
+        {(scenarios[activeScenario]?.monthly_detail || plan.monthly_detail)?.length > 0 && (
           <div style={{ marginBottom: 28 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <div style={{ color: '#A78BFA', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
@@ -306,8 +306,8 @@ export default function PayoffStrategyPage({ navigate }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {plan.monthly_detail.map((month, i) => (
-                    <tr key={i} style={{ borderBottom: i < plan.monthly_detail.length - 1 ? '1px solid rgba(124,58,237,0.05)' : 'none', background: month.cards_paid_off?.length ? 'rgba(16,185,129,0.04)' : 'transparent' }}>
+                  {(scenarios[activeScenario]?.monthly_detail || plan.monthly_detail || []).map((month, i) => (
+                    <tr key={i} style={{ borderBottom: i < (scenarios[activeScenario]?.monthly_detail || plan.monthly_detail || []).length - 1 ? '1px solid rgba(124,58,237,0.05)' : 'none', background: month.cards_paid_off?.length ? 'rgba(16,185,129,0.04)' : 'transparent' }}>
                       <td style={{ padding: '12px 16px', color: '#F0EEFF', fontWeight: 600 }}>Month {month.month}</td>
                       <td style={{ padding: '12px 16px', color: '#6B6490', textAlign: 'right' }}>{month.date}</td>
                       <td style={{ padding: '12px 16px', color: '#A78BFA', textAlign: 'right', fontWeight: 600 }}>${month.total_payment?.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
