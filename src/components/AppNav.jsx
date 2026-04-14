@@ -9,13 +9,12 @@ export default function AppNav({ navigate, user, logout, currentPath }) {
   var isBusiness = user && user.tier === 'business';
 
   var NAV_ITEMS = [
+    { icon: '📊', label: 'Dashboard', path: '/' },
+    { icon: '💳', label: 'Cards & Rewards', path: '/cards' },
     { icon: '📉', label: 'Payoff Plan', path: '/payoff-strategy' },
-    { icon: '\u{1F4CA}', label: 'Dashboard', path: '/' },
-    { icon: '\u{1F4B3}', label: 'Calculator', path: '/calculator' },
-    { icon: '\u{1F3C6}', label: 'Rewards', path: '/rewards' },
-    { icon: '\u{1F4C8}', label: 'Credit Score', path: '/credit-score' },
-    { icon: '\u{1F3E6}', label: 'Accounts', path: '/connect-bank' },
-    { icon: '✦', label: 'Optimizer', path: '/optimizer' },
+    { icon: '🧮', label: 'Calculator', path: '/calculator' },
+    { icon: '📈', label: 'Credit Score', path: '/credit-score' },
+    { icon: '🏦', label: 'Accounts', path: '/connect-bank' },
   ];
 
   function handleNav(path) { navigate(path); setMobileOpen(false); setUserMenuOpen(false); }

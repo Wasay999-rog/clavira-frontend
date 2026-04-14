@@ -113,6 +113,7 @@ export const api = {
   },
   getAccounts: function() { return request('/plaid/accounts'); },
   getTransactions: function() { return request('/plaid/transactions'); },
+  syncAccounts: function() { return request('/plaid/sync', { method: 'POST' }); },
   disconnectAccount: function(accountId) {
     return request('/plaid/accounts/' + accountId, { method: 'DELETE' });
   },

@@ -30,25 +30,47 @@ export default function DashboardPage({ navigate, showToast }) {
       window.history.replaceState({}, '', '/');
     }
 
-    Promise.all([
-      api.getAccounts().catch(() => ({ accounts: [] })),
-      api.getTransactions().catch(() => ({ transactions: [] })),
-    ]).then(([acc, tx]) => {
-      setAccounts(acc?.accounts || []);
-      setTransactions(tx?.transactions || []);
-      setLoading(false);
+    api.syncAccounts().then(() => {
+      Promise.all([
+        api.getAccounts().catch(() => ({ accounts: [] })),
+        api.getTransactions().catch(() => ({ transactions: [] })),
+      ]).then(([acc, tx]) => {
+        setAccounts(acc?.accounts || []);
+        setTransactions(tx?.transactions || []);
+        setLoading(false);
+      });
+    }).catch(() => {
+      Promise.all([
+        api.getAccounts().catch(() => ({ accounts: [] })),
+        api.getTransactions().catch(() => ({ transactions: [] })),
+      ]).then(([acc, tx]) => {
+        setAccounts(acc?.accounts || []);
+        setTransactions(tx?.transactions || []);
+        setLoading(false);
+      });
     });
     api.getOptimizer().then(setOptimizerData).catch(() => {});
     api.getCreditScore().then(setScoreData).catch(() => {});
   }, []);
   useEffect(() => {
-    Promise.all([
-      api.getAccounts().catch(() => ({ accounts: [] })),
-      api.getTransactions().catch(() => ({ transactions: [] })),
-    ]).then(([acc, tx]) => {
-      setAccounts(acc?.accounts || []);
-      setTransactions(tx?.transactions || []);
-      setLoading(false);
+    api.syncAccounts().then(() => {
+      Promise.all([
+        api.getAccounts().catch(() => ({ accounts: [] })),
+        api.getTransactions().catch(() => ({ transactions: [] })),
+      ]).then(([acc, tx]) => {
+        setAccounts(acc?.accounts || []);
+        setTransactions(tx?.transactions || []);
+        setLoading(false);
+      });
+    }).catch(() => {
+      Promise.all([
+        api.getAccounts().catch(() => ({ accounts: [] })),
+        api.getTransactions().catch(() => ({ transactions: [] })),
+      ]).then(([acc, tx]) => {
+        setAccounts(acc?.accounts || []);
+        setTransactions(tx?.transactions || []);
+        setLoading(false);
+      });
     });
     api.getOptimizer().then(setOptimizerData).catch(() => {});
     api.getCreditScore().then(setScoreData).catch(() => {});
