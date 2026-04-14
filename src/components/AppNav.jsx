@@ -9,6 +9,7 @@ export default function AppNav({ navigate, user, logout, currentPath }) {
   var isBusiness = user && user.tier === 'business';
 
   var NAV_ITEMS = [
+    { icon: '📉', label: 'Payoff Plan', path: '/payoff-strategy' },
     { icon: '\u{1F4CA}', label: 'Dashboard', path: '/' },
     { icon: '\u{1F4B3}', label: 'Calculator', path: '/calculator' },
     { icon: '\u{1F3C6}', label: 'Rewards', path: '/rewards' },

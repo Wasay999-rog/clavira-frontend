@@ -4,6 +4,7 @@ import Toast from './components/Toast.jsx';
 import { AuthProvider, useAuth } from './components/AuthContext.jsx';
 
 // Visitor pages (marketing)
+const PayoffStrategyPage = lazy(() => import('./pages/PayoffStrategyPage.jsx'));
 const HomePage = lazy(() => import('./pages/HomePage.jsx'));
 const FeaturesPage = lazy(() => import('./pages/FeaturesPage.jsx'));
 const PricingPage = lazy(() => import('./pages/PricingPage.jsx'));
@@ -95,6 +96,7 @@ function AppContent() {
         <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
           <Suspense fallback={<PageLoader />}>
             <Routes>
+              <Route path="/payoff-strategy" element={<PayoffStrategyPage navigate={navigate} />} />
               <Route path="/" element={<DashboardPage navigate={navigate} showToast={showToast} />} />
               <Route path="/calculator" element={<CalculatorPage navigate={navigate} />} />
               <Route path="/rewards" element={<RewardsPage navigate={navigate} />} />
