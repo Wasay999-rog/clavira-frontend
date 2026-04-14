@@ -175,7 +175,10 @@ export default function DashboardPage({ navigate, showToast }) {
         {/* Stats row */}
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 28 }}>
           {gap > 100 && (
-            <div style={{ flex: 1, minWidth: 140, background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.2)', borderRadius: 14, padding: '20px 24px' }}>
+            <div
+              onClick={() => navigate('/optimizer')}
+              style={{ flex: 1, minWidth: 140, background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.2)', borderRadius: 14, padding: '16px 18px', cursor: 'pointer' }}
+            >
               <div style={{ color: '#F43F5E', fontWeight: 800, fontSize: 28, lineHeight: 1 }}>${gap.toLocaleString()}</div>
               <div style={{ color: '#6B6490', fontSize: 12, marginTop: 6 }}>left on table per year</div>
               <div style={{ color: '#F43F5E', fontSize: 11, fontWeight: 600, marginTop: 4 }}>→ Optimize your cards</div>
@@ -187,12 +190,15 @@ export default function DashboardPage({ navigate, showToast }) {
               style={{ flex: 1, minWidth: 140, background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 14, padding: '20px 24px', cursor: 'pointer' }}
             >
               <div style={{ color: '#A78BFA', fontWeight: 800, fontSize: 28, lineHeight: 1 }}>{debtFreeMonths}mo</div>
-              <div style={{ color: '#6B6490', fontSize: 12, marginTop: 6 }}>to debt-free at min payments</div>
+              <div style={{ color: '#6B6490', fontSize: 12, marginTop: 6 }}>months to become debt-free</div>
               <div style={{ color: '#A78BFA', fontSize: 11, fontWeight: 600, marginTop: 4 }}>→ See your payoff plan</div>
             </div>
           )}
           {scoreBoost && (
-            <div style={{ flex: 1, minWidth: 140, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 14, padding: '20px 24px' }}>
+            <div
+              onClick={() => navigate('/credit-score')}
+              style={{ flex: 1, minWidth: 140, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 14, padding: '16px 18px', cursor: 'pointer' }}
+            >
               <div style={{ color: '#10B981', fontWeight: 800, fontSize: 28, lineHeight: 1 }}>+{scoreBoost.points}pts</div>
               <div style={{ color: '#6B6490', fontSize: 12, marginTop: 6 }}>score boost if you pay ${scoreBoost.amount.toLocaleString()} today</div>
               <div style={{ color: '#10B981', fontSize: 11, fontWeight: 600, marginTop: 4 }}>→ Boost your score now</div>
