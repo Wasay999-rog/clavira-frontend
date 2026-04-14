@@ -1,1 +1,0 @@
-import{j as i}from"./index-DKzsPHZv.js";function n({children:t,style:a}){return i.jsx("div",{style:{maxWidth:1080,margin:"0 auto",padding:"0 48px",...a},className:"section-wrap",children:t})}export{n as S};

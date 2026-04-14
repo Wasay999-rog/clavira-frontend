@@ -24,14 +24,21 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!authed) return;
-    setLoading(true);
-    Promise.all([
-      fetch(`${API}/admin/stats`, { headers: { 'x-admin-key': ADMIN_KEY } }).then(r => r.json()),
-      fetch(`${API}/admin/users`, { headers: { 'x-admin-key': ADMIN_KEY } }).then(r => r.json()),
-    ]).then(([s, u]) => {
-      setStats(s);
-      setUsers(u.users || []);
-    }).finally(() => setLoading(false));
+
+    const fetchData = () => {
+      Promise.all([
+        fetch(`${API}/admin/stats`, { headers: { 'x-admin-key': ADMIN_KEY } }).then(r => r.json()),
+        fetch(`${API}/admin/users`, { headers: { 'x-admin-key': ADMIN_KEY } }).then(r => r.json()),
+      ]).then(([s, u]) => {
+        setStats(s);
+        setUsers(u.users || []);
+        setLoading(false);
+      });
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
   }, [authed]);
 
   const filtered = users.filter(u => {
