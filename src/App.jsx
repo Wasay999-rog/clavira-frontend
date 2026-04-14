@@ -31,6 +31,7 @@ const CreditScorePage = lazy(() => import('./pages/CreditScorePage.jsx'));
 const ConnectBankPage = lazy(() => import('./pages/ConnectBankPage.jsx'));
 const OptimizerPage = lazy(() => import('./pages/OptimizerPage.jsx'));
 const CardsPage = lazy(() => import('./pages/CardsPage.jsx'));
+const AdminPage = lazy(() => import('./pages/AdminPage.jsx'));
 const Chatbot = lazy(() => import('./components/Chatbot.jsx'));
 
 // Navs
@@ -159,6 +160,7 @@ function AppContent() {
             <Route path="/blog/debt-free-story" element={<BlogPostPage navigate={navigate} slug="debt-free-story" />} />
             <Route path="/blog/how-ai-works" element={<BlogPostPage navigate={navigate} slug="how-ai-works" />} />
             <Route path="/faq" element={<FAQPage navigate={navigate} />} />
+              <Route path="/admin" element={<AdminPage navigate={navigate} />} />
             <Route path="/login" element={<LoginPage navigate={navigate} showToast={showToast} />} />
             <Route path="/register" element={<RegisterPage navigate={navigate} showToast={showToast} />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage navigate={navigate} showToast={showToast} />} />
