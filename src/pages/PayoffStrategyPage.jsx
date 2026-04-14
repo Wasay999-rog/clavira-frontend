@@ -95,7 +95,7 @@ export default function PayoffStrategyPage({ navigate }) {
         }}>
           <div style={{ position: 'absolute', top: -50, right: -50, width: 200, height: 200, borderRadius: '50%', background: 'rgba(124,58,237,0.15)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', bottom: -30, left: -30, width: 150, height: 150, borderRadius: '50%', background: 'rgba(124,58,237,0.08)', pointerEvents: 'none' }} />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
             <div>
               <div style={{ color: '#6B6490', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Total Debt</div>
               <div style={{ color: '#F43F5E', fontWeight: 800, fontSize: 32, lineHeight: 1 }}>${data.total_debt?.toLocaleString()}</div>
@@ -186,7 +186,7 @@ export default function PayoffStrategyPage({ navigate }) {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 28 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, marginBottom: 28 }}>
           {/* Card priority */}
           <div>
             <div style={{ color: '#A78BFA', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Pay In This Order</div>
@@ -274,6 +274,21 @@ export default function PayoffStrategyPage({ navigate }) {
         {plan.monthly_detail?.length > 0 && (
           <div style={{ marginBottom: 28 }}>
             <div style={{ color: '#A78BFA', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>Month-by-Month Plan</div>
+            {activeData && (
+              <div style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
+                {[
+                  { label: 'Monthly Payment', value: `$${activeData.monthly_payment?.toLocaleString(undefined, {maximumFractionDigits: 0})}`, color: '#A78BFA' },
+                  { label: 'Months to Payoff', value: `${activeData.months} months`, color: '#7C3AED' },
+                  { label: 'Total Interest', value: `$${activeData.total_interest?.toLocaleString()}`, color: '#F43F5E' },
+                  { label: 'Debt-Free Date', value: activeData.debt_free_date, color: '#10B981' },
+                ].map((s, i) => (
+                  <div key={i} style={{ background: '#0F0D1F', border: '1px solid rgba(124,58,237,0.1)', borderRadius: 12, padding: '12px 16px', flex: 1, minWidth: 140 }}>
+                    <div style={{ color: '#6B6490', fontSize: 11, marginBottom: 4 }}>{s.label}</div>
+                    <div style={{ color: s.color, fontWeight: 700, fontSize: 16 }}>{s.value}</div>
+                  </div>
+                ))}
+              </div>
+            )}
             <div style={{ background: '#0F0D1F', border: '1px solid rgba(124,58,237,0.1)', borderRadius: 16, overflow: 'hidden' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
