@@ -5,8 +5,12 @@ import Section from '../components/Section.jsx';
 import './DashboardPage.css';
 import PayoffStrategy from '../components/PayoffStrategy.jsx';
 import '../components/PayoffStrategy.css';
+
 export default function DashboardPage({ navigate, showToast }) {
   const { user } = useAuth();
+  const [wowDismissed, setWowDismissed] = useState(false);
+  const [optimizerData, setOptimizerData] = useState(null);
+  const [scoreData, setScoreData] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,6 +32,8 @@ export default function DashboardPage({ navigate, showToast }) {
       setTransactions(tx?.transactions || []);
       setLoading(false);
     });
+    api.getOptimizer().then(setOptimizerData).catch(() => {});
+    api.getCreditScore().then(setScoreData).catch(() => {});
   }, []);
 
   const hasLinked = accounts.length > 0;
@@ -93,6 +99,107 @@ export default function DashboardPage({ navigate, showToast }) {
     return map[cat] || '💳';
   };
 
+  // ─── WOW Banner ───────────────────────────────────────────────
+  const WowBanner = () => {
+    if (wowDismissed || !hasLinked) return null;
+
+    const gap = optimizerData?.has_data
+      ? Math.max(0, (optimizerData.best_single_card?.[0]?.net_value || 0) -
+          (optimizerData.existing_cards?.reduce((s, c) => s + (c.net_value || 0), 0) || 0))
+      : 0;
+
+    const debtFreeMonths = (() => {
+      if (creditCards.length === 0) return null;
+      const totalDebt = totalCreditUsed;
+      if (totalDebt <= 0) return null;
+      const monthlyPayment = totalDebt * 0.03;
+      const months = Math.ceil(totalDebt / monthlyPayment);
+      return months;
+    })();
+
+    const scoreBoost = (() => {
+      if (!scoreData || utilPct <= 10) return null;
+      const target = totalCreditLimit * 0.1;
+      const payAmount = Math.max(0, totalCreditUsed - target);
+      if (payAmount <= 0) return null;
+      const currentUtil = utilPct;
+      const targetUtil = 10;
+      const boost = Math.round((currentUtil - targetUtil) * 0.8);
+      return { amount: Math.round(payAmount), points: boost };
+    })();
+
+    const hasData = gap > 0 || debtFreeMonths || scoreBoost;
+    if (!hasData) return null;
+
+    return (
+      <div style={{
+        background: 'linear-gradient(135deg, #1A0E3A 0%, #0F0D1F 100%)',
+        border: '1px solid rgba(124,58,237,0.4)',
+        borderRadius: 20, padding: '24px 28px',
+        marginBottom: 24, position: 'relative', overflow: 'hidden',
+      }}>
+        {/* Glow */}
+        <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(124,58,237,0.15)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: -40, left: -40, width: 150, height: 150, borderRadius: '50%', background: 'rgba(124,58,237,0.08)', pointerEvents: 'none' }} />
+
+        {/* Dismiss */}
+        <button
+          onClick={() => setWowDismissed(true)}
+          style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: '#6B6490', cursor: 'pointer', fontSize: 20, lineHeight: 1 }}
+        >×</button>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(124,58,237,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎯</div>
+          <div style={{ color: '#A78BFA', fontWeight: 700, fontSize: 13, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Your Clavira Snapshot</div>
+        </div>
+
+        {/* Stats row */}
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
+          {gap > 100 && (
+            <div style={{ flex: 1, minWidth: 140, background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.2)', borderRadius: 14, padding: '16px 18px' }}>
+              <div style={{ color: '#F43F5E', fontWeight: 800, fontSize: 28, lineHeight: 1 }}>${gap.toLocaleString()}</div>
+              <div style={{ color: '#6B6490', fontSize: 12, marginTop: 6 }}>left on table per year</div>
+              <div style={{ color: '#F43F5E', fontSize: 11, fontWeight: 600, marginTop: 4 }}>→ Optimize your cards</div>
+            </div>
+          )}
+          {debtFreeMonths && totalCreditUsed > 0 && (
+            <div style={{ flex: 1, minWidth: 140, background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 14, padding: '16px 18px' }}>
+              <div style={{ color: '#A78BFA', fontWeight: 800, fontSize: 28, lineHeight: 1 }}>{debtFreeMonths}mo</div>
+              <div style={{ color: '#6B6490', fontSize: 12, marginTop: 6 }}>to debt-free at min payments</div>
+              <div style={{ color: '#A78BFA', fontSize: 11, fontWeight: 600, marginTop: 4 }}>→ See your payoff plan</div>
+            </div>
+          )}
+          {scoreBoost && (
+            <div style={{ flex: 1, minWidth: 140, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 14, padding: '16px 18px' }}>
+              <div style={{ color: '#10B981', fontWeight: 800, fontSize: 28, lineHeight: 1 }}>+{scoreBoost.points}pts</div>
+              <div style={{ color: '#6B6490', fontSize: 12, marginTop: 6 }}>score boost if you pay ${scoreBoost.amount.toLocaleString()} today</div>
+              <div style={{ color: '#10B981', fontSize: 11, fontWeight: 600, marginTop: 4 }}>→ Boost your score now</div>
+            </div>
+          )}
+        </div>
+
+        {/* CTA */}
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <button
+            onClick={() => navigate('/optimizer')}
+            style={{ background: 'linear-gradient(135deg, #7C3AED, #8B5CF6)', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+          >
+            View Full Action Plan →
+          </button>
+          {!isPremium && (
+            <button
+              onClick={() => navigate('/pricing')}
+              style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', color: '#F59E0B', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+            >
+              ⭐ Unlock Full Plan
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="dash-loading">
@@ -131,6 +238,8 @@ export default function DashboardPage({ navigate, showToast }) {
           </div>
         </div>
       </Section>
+
+      <WowBanner />
 
       {/* Connect CTA if no accounts */}
       {!hasLinked && (
