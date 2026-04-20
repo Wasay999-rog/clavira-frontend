@@ -125,4 +125,14 @@ createCheckout: function(tier, coupon_code) {
   });
 },
 getSubscription: function() { return request('/stripe/subscription'); },
-getPortal: function() { return request('/stripe/portal'); },};
+getPortal: function() { return request('/stripe/portal'); },
+updateProfile: function(first_name, last_name) {
+  return request('/auth/profile', { method: 'PUT', body: JSON.stringify({ first_name, last_name }) });
+},
+changePassword: function(current_password, new_password) {
+  return request('/auth/change-password', { method: 'POST', body: JSON.stringify({ current_password, new_password }) });
+},
+deleteAccount: function() {
+  return request('/auth/delete-account', { method: 'DELETE' });
+},
+};
